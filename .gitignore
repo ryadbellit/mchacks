@@ -23,4 +23,11 @@ dist-ssr
 *.sln
 *.sw?
 
+# Server virtual machine
+.venv/
+
+# Server environment files
 .env
+
+# pycache
+__pycache__/

@@ -1,0 +1,32 @@
+import os
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+
+COMPILER_KEY = os.getenv("ONE_COMPILER_KEY")
+COMPILER_URL = os.getenv("COMPILER_URL")
+
+def compile_code_logic(user_code): # Reçoit le code en argument
+    body = {
+        "language": "python",
+        "stdin": "Ryad",
+        "files": [
+            {
+                "name": "index.py",
+                "content": user_code
+            }
+        ]
+    }
+    headers = {
+        "x-rapidapi-key": COMPILER_KEY,
+        "x-rapidapi-host": "onecompiler-apis.p.rapidapi.com",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.post(COMPILER_URL, json=body, headers=headers)
+        response.raise_for_status()
+        return response.json() # Retourne le dictionnaire Python
+    except Exception as e:
+        return {"error": str(e)}
