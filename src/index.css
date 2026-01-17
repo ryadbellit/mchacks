@@ -11,6 +11,15 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --color-bg-main: #020617;           
+  --color-bg-secondary: linear-gradient(90deg, #0f172a, #1e293b);   
+  --color-text-main: #ffffff;   
+  --color-text-secondary: #525252;     
+  --color-text-success: #39b01e; 
+  --color-text-error: #e70c0c; 
+  --color-bubble-main: #1c43f1; 
+  --color-bubble-secondary: #3f424d;  
 }
 
 a {
@@ -24,10 +33,11 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  overflow: hidden;
+  width: 100%;
+  height: 100vh;
 }
 
 h1 {
