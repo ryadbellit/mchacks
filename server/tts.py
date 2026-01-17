@@ -5,7 +5,7 @@ from elevenlabs.play import play
 
 load_dotenv()
 
-client = ElevenLabs(api_key=os.getenv("eleven_labs_api_key"))
+client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 
 # TTS
 
@@ -16,6 +16,3 @@ audio = client.text_to_speech.convert(
 )
 
 play(audio)
-
-
-# STT
