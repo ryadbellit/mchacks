@@ -1,0 +1,143 @@
+/* test-results.css */
+.test-results-panel {
+  background-color: #0d0d0d;
+  border-radius: 8px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Consolas', monospace;
+  color: #ffffff;
+}
+
+.test-results-header h2 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.test-results-content {
+  height: 50%;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding-right: 8px;
+}
+
+.test-results-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.test-results-content::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.test-results-content::-webkit-scrollbar-thumb {
+  background: #4a4a4a;
+  border-radius: 4px;
+}
+
+.test-results-content::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+.test-case {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid #2a2a2a;
+}
+
+.test-case-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.test-case-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.check-icon {
+  color: #22c55e;
+}
+
+.test-status {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 4px;
+}
+
+.test-status.passed {
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.test-status.failed {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+.test-case-details {
+  margin-bottom: 12px;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+}
+
+.detail-row {
+  display: flex;
+  margin-bottom: 4px;
+  line-height: 1.6;
+}
+
+.detail-label {
+  color: #9ca3af;
+  min-width: 70px;
+  flex-shrink: 0;
+}
+
+.detail-value {
+  color: #e5e7eb;
+  word-break: break-all;
+}
+
+.test-metrics {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: #9ca3af;
+  padding-top: 8px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.metric svg {
+  stroke-width: 2;
+}
+
+.test-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 16px;
+  border-top: 1px solid #2a2a2a;
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.success-rate {
+  color: #22c55e;
+  font-weight: 500;
+}
