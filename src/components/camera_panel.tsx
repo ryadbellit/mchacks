@@ -1,11 +1,10 @@
 // CameraPanel.tsx - Minimalist version
-import { Video, VideoOff, Mic, MicOff } from "lucide-react";
+import { Video, VideoOff } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import "../css/components/camera_panel.css"; // renamed for clarity
 
 export default function CameraPanel() {
   const [enableCam, setEnableCam] = useState<"enabled" | "disabled">("enabled");
-  const [enableMic, setEnableMic] = useState<"enabled" | "disabled">("enabled");
   const [error, setError] = useState("");
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -15,7 +14,7 @@ export default function CameraPanel() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: enableMic === "enabled"
+        audio: false
       });
 
       if (videoRef.current) {
@@ -78,7 +77,8 @@ export default function CameraPanel() {
       {enableCam === "disabled" && (
           <div className="preview-placeholder">
             <VideoOff size={48} />
-            <span>Camera disabled</span>
+            {error ? <span>{error}</span> :
+            <span>Camera disabled</span>}
           </div>
         )}
       </div>
