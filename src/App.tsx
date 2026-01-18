@@ -3,6 +3,7 @@ import './App.css'
 import Dashboard from './pages/dashboard';
 import LandingPage from './pages/landing';
 import Home from './pages/login';
+import ProblemsPage from './pages/problems';
 import Header from './components/header';
 
 function App() {
@@ -13,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/problems" element={<Home />} />
+        <Route path="/problems" element={<ProblemsPage />} />
       </Routes>
     </Router>
   );
