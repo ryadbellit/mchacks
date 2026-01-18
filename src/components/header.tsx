@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Send, LogIn, UserPlus } from "lucide-react";
 import RunButton from '../components/RunButton'
 import "../css/components/header.css";
+import logo from '../../logo.png';
 
 export default function Header() {
     const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -19,8 +20,8 @@ export default function Header() {
         <header id="app-header">
             {/* Left */}
             <div id="header-left" onClick={navigateToMenu}>
-                <div id="logo">AI</div>
-                <span id="title">AI Interview Platform</span>
+                <img src={logo} alt="Logo" id="logo-img"/>
+                <span id="title">PrepCode</span>
             </div>
 
             {/* Center */}

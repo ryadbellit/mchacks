@@ -28,16 +28,13 @@
     opacity: 0.8;
 }
 
-#logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #8b5cf6, #3b82f6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 14px;
+/* Logo Image Style */
+#logo-img {
+    height: 40px !important; /* Force the height */
+    width: auto !important; /* Maintain aspect ratio */
+    max-height: 40px;
+    object-fit: contain;
+    display: block;
 }
 
 #title {
@@ -178,6 +175,11 @@
         gap: 1rem;
     }
 
+    #logo-img {
+        height: 32px !important;
+        max-height: 32px;
+    }
+
     .header-tagline {
         display: none;
     }
@@ -213,9 +215,8 @@
         padding: 8px 12px;
     }
 
-    #logo {
-        width: 32px;
-        height: 32px;
-        font-size: 12px;
+    #logo-img {
+        height: 28px !important;
+        max-height: 28px;
     }
 }

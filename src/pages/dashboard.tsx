@@ -48,8 +48,7 @@ export default function Dashboard() {
         setProblemLoading(false);
       }
     };
-    console.log("Fetching problem ID:", problemId);
-    fetchProblem(Number(problemId)); // Charge le problème 1 par défaut
+    fetchProblem(Number(problemId)); 
   }, []);
   return (
     <>

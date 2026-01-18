@@ -61,6 +61,18 @@ def process_transcript():
         
     return jsonify({"error": "No transcript provided"}), 400
 
+@app.route('/api/get-problem', methods=['GET'])
+def get_all_problems():
+    """Récupère tous les problèmes depuis la base de données"""
+    try:
+        problems = list(problems_collection.find().sort('question_id', 1).limit(100))
+        for problem in problems:
+            problem['_id'] = str(problem['_id'])  # Convertir ObjectId en string
+        return jsonify(problems), 200
+    except Exception as e:
+        print(f"Erreur: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/api/get-problem/<problem_id>', methods=['GET'])
 def get_problem(problem_id):
     try:
