@@ -1,16 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import { Sparkles, CheckCircle, ArrowRight } from "lucide-react";
+import { useAuth0 } from "@auth0/auth0-react";
 import "../css/pages/landing.css";
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   const handleStartPracticing = () => {
-    navigate("/dashboard");
+    isAuthenticated ?
+      navigate("/dashboard")
+    : 
+      loginWithRedirect();
   };
 
   const handleBrowseProblems = () => {
-    navigate("/problems");
+    isAuthenticated ?
+      navigate("/problems")
+    : 
+      loginWithRedirect();
   };
 
   return (
