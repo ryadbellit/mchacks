@@ -10,7 +10,7 @@ CORS(app)
 
 load_dotenv()
 
-@app.route('/generate', methods=['POST'])
+@app.route('/scribe-token', methods=['POST'])
 def handle_prompt():
     data = request.get_json()
     
