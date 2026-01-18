@@ -37,7 +37,9 @@ main {
     overflow: hidden;
     background: #0a0a0a;
     border-radius: 8px;
+    min-height: 400px;
 }
+
 .sidebar-column {
     display: flex;
     flex-direction: column;
