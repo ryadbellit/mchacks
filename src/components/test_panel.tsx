@@ -21,49 +21,108 @@ export interface TestPanelHandle {
 const TestResults = forwardRef<TestPanelHandle, {problemData: any}>(({problemData}, ref) => {
 
   const [testCases, setTestCases] = useState<TestCase[]>([]);
-  const testCaseFormat: TestCase[] = [
-    {
-
-      id: 1,
-      name: "Test Case 1",
-      status: "passed",
-      input: "[2,7,11,15], 9",
-      output: "[0,1]",
-      expected: "[0,1]",
-      time: "2ms",
-      memory: "41.2 MB"
-    },
-    {
-      id: 2,
-      name: "Test Case 2",
-      status: "passed",
-      input: "[3,2,4], 6",
-      output: "[1,2]",
-      expected: "[1,2]",
-      time: "1ms",
-      memory: "40.8 MB"
-    },
-    {
-      id: 3,
-      name: "Test Case 3",
-      status: "passed",
-      input: "[3,3], 6",
-      output: "[0,1]",
-      expected: "[0,1]",
-      time: "1ms",
-      memory: "40.5 MB"
-    },
-    {
-      id: 4,
-      name: "Test Case 4",
-      status: "failed",
-      input: "[1,5,3,7], 12",
-      output: "[1,3]",
-      expected: "[2,3]",
-      time: "3ms",
-      memory: "42.1 MB"
-    }
-  ];
+ const testCaseFormat: TestCase[] = [
+  {
+    id: 1,
+    name: "Test Case 1",
+    status: "passed",
+    input: "[2,7,11,15], 9",
+    output: "[0,1]",
+    expected: "[0,1]",
+    time: "2ms",
+    memory: "41.2 MB"
+  },
+  {
+    id: 2,
+    name: "Test Case 2",
+    status: "passed",
+    input: "[3,2,4], 6",
+    output: "[1,2]",
+    expected: "[1,2]",
+    time: "1ms",
+    memory: "40.8 MB"
+  },
+  {
+    id: 3,
+    name: "Test Case 3",
+    status: "passed",
+    input: "[3,3], 6",
+    output: "[0,1]",
+    expected: "[0,1]",
+    time: "1ms",
+    memory: "40.5 MB"
+  },
+  {
+    id: 4,
+    name: "Test Case 4",
+    status: "passed",
+    input: "[1,5,3,7], 12",
+    output: "[2,3]",
+    expected: "[2,3]",
+    time: "3ms",
+    memory: "42.1 MB"
+  },
+  {
+    id: 5,
+    name: "Test Case 5",
+    status: "passed",
+    input: "[0,4,3,0], 0",
+    output: "[0,3]",
+    expected: "[0,3]",
+    time: "2ms",
+    memory: "41.5 MB"
+  },
+  {
+    id: 6,
+    name: "Test Case 6",
+    status: "passed",
+    input: "[-1,-2,-3,-4,-5], -8",
+    output: "[2,4]",
+    expected: "[2,4]",
+    time: "2ms",
+    memory: "41.0 MB"
+  },
+  {
+    id: 7,
+    name: "Test Case 7",
+    status: "passed",
+    input: "[10,20,30,40,50], 90",
+    output: "[3,4]",
+    expected: "[3,4]",
+    time: "1ms",
+    memory: "40.7 MB"
+  },
+  {
+    id: 8,
+    name: "Test Case 8",
+    status: "passed",
+    input: "[1,2,3,4,5,6,7,8,9], 17",
+    output: "[7,8]",
+    expected: "[7,8]",
+    time: "3ms",
+    memory: "42.3 MB"
+  },
+  {
+    id: 9,
+    name: "Test Case 9",
+    status: "passed",
+    input: "[5,5], 10",
+    output: "[0,1]",
+    expected: "[0,1]",
+    time: "1ms",
+    memory: "40.6 MB"
+  },
+  {
+    id: 10,
+    name: "Test Case 10",
+    status: "passed",
+    input: "[100,200,300,400], 700",
+    output: "[2,3]",
+    expected: "[2,3]",
+    time: "2ms",
+    memory: "41.8 MB"
+  }
+];
 
   function getComputedTests() {
     setTestCases(testCaseFormat);
