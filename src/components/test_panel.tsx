@@ -14,7 +14,8 @@ interface TestCase {
 }
 
 export default function TestResults({problemData}: {problemData: any}) {
-  const testCases: TestCase[] = [
+  const testCases: TestCase[] = []
+  const testCasesFormat: TestCase[] = [
     {
 
       
@@ -61,7 +62,7 @@ export default function TestResults({problemData}: {problemData: any}) {
 
   const passedTests = testCases.filter(t => t.status === "passed").length;
   const totalTests = testCases.length;
-  const successRate = Math.round((passedTests / totalTests) * 100);
+  const successRate = Math.round((passedTests / totalTests) * 100) ;
 
   return (
     <div className="test-results-panel">
@@ -112,7 +113,7 @@ export default function TestResults({problemData}: {problemData: any}) {
 
       <div className="test-summary">
         <span>Tests: {passedTests}/{totalTests} passed</span>
-        <span className="success-rate">{successRate}% success rate</span>
+        <span className={`success-rate ${successRate >= 60 ? 'green-success-rate' : 'red-success-rate'}`}>{successRate ? successRate : 0}% success rate</span>
       </div>
     </div>
   );

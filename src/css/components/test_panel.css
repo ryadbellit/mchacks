@@ -138,6 +138,11 @@
 }
 
 .success-rate {
-  color: #22c55e;
   font-weight: 500;
+}
+.green-success-rate {
+  color: #22c55e;
+}
+.red-success-rate {
+  color: #ef4444;
 }
