@@ -1,0 +1,55 @@
+.run-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: #0e639c;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.run-btn:hover:not(:disabled) {
+  background-color: #1177bb;
+}
+
+.run-btn:active:not(:disabled) {
+  background-color: #0d5a8f;
+}
+
+.run-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.compile-output {
+  background-color: #252526;
+  border: 1px solid #3e3e42;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.compile-output-header {
+  padding: 8px 12px;
+  background-color: #2d2d30;
+  color: #cccccc;
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.compile-output-content {
+  margin: 0;
+  padding: 12px;
+  color: #d4d4d4;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: 13px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  max-height: 300px;
+  overflow-y: auto;
+}

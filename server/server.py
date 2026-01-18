@@ -20,12 +20,13 @@ load_dotenv()
 @app.route("/compile", methods=["POST"])
 def handle_compile():
     data = request.get_json()
+    language = data.get("language")
     user_code = data.get("code")
     
     if not user_code:
         return jsonify({"error": "No code provided"}), 400
 
-    result = compile_code_logic(user_code)
+    result = compile_code_logic(language, user_code)
     
     return jsonify(result)
 

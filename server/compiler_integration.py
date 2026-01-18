@@ -6,14 +6,23 @@ load_dotenv()
 
 COMPILER_KEY = os.getenv("ONE_COMPILER_KEY")
 COMPILER_URL = os.getenv("COMPILER_URL")
+extensions = {
+    "python" : ".py",
+    "javascript" : ".js",
+    "typescript" : ".ts",
+    "java" : ".java",
+    "cpp" : ".cpp",
+    "csharp" : ".cs"
+}
 
-def compile_code_logic(user_code): # Reçoit le code en argument
+def compile_code_logic(language, user_code):
+    print(extensions[language])
     body = {
-        "language": "python",
-        "stdin": "Ryad",
+        "language": language,
+        "stdin": "",
         "files": [
             {
-                "name": "index.py",
+                "name": "index" + extensions[language],
                 "content": user_code
             }
         ]
@@ -27,6 +36,7 @@ def compile_code_logic(user_code): # Reçoit le code en argument
     try:
         response = requests.post(COMPILER_URL, json=body, headers=headers)
         response.raise_for_status()
+        print(response.json())
         return response.json() # Retourne le dictionnaire Python
     except Exception as e:
         return {"error": str(e)}

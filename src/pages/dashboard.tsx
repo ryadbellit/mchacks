@@ -2,6 +2,7 @@ import Chat from '../components/chat';
 import CodeEditor from '../components/code_editor'
 import CameraPanel from '../components/camera_panel';
 import TestPanel from '../components/test_panel';
+
 import "../css/pages/dashboard.css";
 
 export default function Dashboard() {
