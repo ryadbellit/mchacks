@@ -48,7 +48,6 @@ export default function Chat({problemData, problemLoading}: ChatProps) {
     const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     // --- LOGIQUE ELEVENLABS SCRIBE ---

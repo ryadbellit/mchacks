@@ -33,6 +33,7 @@ export default function Dashboard() {
 
   const [problemData, setProblemData] = useState<ProblemData | null>(null);
   const [problemLoading, setProblemLoading] = useState(true);
+
   useEffect(() => {
     const fetchProblem = async (problemId: number) => {
       try {
@@ -47,8 +48,8 @@ export default function Dashboard() {
         setProblemLoading(false);
       }
     };
-
-    fetchProblem(4); // Charge le problème 1 par défaut
+    console.log("Fetching problem ID:", problemId);
+    fetchProblem(Number(problemId)); // Charge le problème 1 par défaut
   }, []);
   return (
     <>

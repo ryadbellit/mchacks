@@ -13,7 +13,7 @@ export default function Header() {
         navigate("/");
     }
 
-    const isDashboard = location.pathname === "/dashboard";
+    const isDashboard = location.pathname.includes("/dashboard/");
 
     return (
         <header id="app-header">

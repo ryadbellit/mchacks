@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../css/pages/problems.css';
 
@@ -11,31 +11,46 @@ interface Problem {
   solved: boolean;
 }
 
-const problems: Problem[] = [
-  { id: 1, title: 'Two Sum', category: 'Array', difficulty: 'Easy', acceptance: '49.2%', solved: true },
-  { id: 2, title: 'Add Two Numbers', category: 'Linked List', difficulty: 'Medium', acceptance: '42.1%', solved: false },
-  { id: 3, title: 'Longest Substring Without Repeating Characters', category: 'String', difficulty: 'Medium', acceptance: '35.8%', solved: false },
-  { id: 4, title: 'Median of Two Sorted Arrays', category: 'Array', difficulty: 'Hard', acceptance: '38.4%', solved: false },
-  { id: 5, title: 'Longest Palindromic Substring', category: 'String', difficulty: 'Medium', acceptance: '33.2%', solved: true },
-  { id: 6, title: 'Reverse Integer', category: 'Math', difficulty: 'Easy', acceptance: '27.5%', solved: true },
-  { id: 7, title: 'String to Integer (atoi)', category: 'String', difficulty: 'Medium', acceptance: '16.8%', solved: false },
-  { id: 8, title: 'Palindrome Number', category: 'Math', difficulty: 'Easy', acceptance: '54.2%', solved: true },
-  { id: 9, title: 'Regular Expression Matching', category: 'String', difficulty: 'Hard', acceptance: '27.9%', solved: false },
-  { id: 10, title: 'Container With Most Water', category: 'Array', difficulty: 'Medium', acceptance: '54.1%', solved: false },
-  { id: 11, title: 'Integer to Roman', category: 'Math', difficulty: 'Medium', acceptance: '61.8%', solved: false },
-  { id: 12, title: 'Roman to Integer', category: 'Math', difficulty: 'Easy', acceptance: '58.7%', solved: true },
-  { id: 13, title: 'Longest Common Prefix', category: 'String', difficulty: 'Easy', acceptance: '41.2%', solved: false },
-  { id: 14, title: '3Sum', category: 'Array', difficulty: 'Medium', acceptance: '33.8%', solved: false },
-  { id: 15, title: 'Letter Combinations of a Phone Number', category: 'String', difficulty: 'Medium', acceptance: '57.4%', solved: false },
-];
-
 function ProblemsPage() {
 
   const navigate = useNavigate();
-
+  const [problems, setProblems] = useState<Problem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
 
+  useEffect(() => {
+    const fetchProblems = async () => {
+      try {
+        setLoading(true);
+        const fetchedProblems: Problem[] = [];
+        
+        for(let n = 1; n < 10; n++){
+          const currentFetch = await fetch(`http://localhost:5000/api/get-problem/${n}`);
+          if (!currentFetch.ok) throw new Error('Failed to fetch problem');
+          const data = await currentFetch.json();
+          data.id = n;
+          fetchedProblems.push(data);
+        }
+        
+        setProblems(fetchedProblems);
+        
+        // Afficher le premier problème automatiquement
+        if (fetchedProblems.length > 0) {
+          setSelectedProblem(fetchedProblems[0]);
+        }
+        
+      } catch (error) {
+        console.error('Error fetching problems:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProblems();
+  }, []);
+
   const handleRandomProblem = () => {
+    if (problems.length === 0) return;
     const randomIndex = Math.floor(Math.random() * problems.length);
     setSelectedProblem(problems[randomIndex]);
   };
@@ -52,6 +67,16 @@ function ProblemsPage() {
         return '';
     }
   };
+
+  if (loading) {
+    return (
+      <main className="problems-container">
+        <div className="problems-content">
+          <p>Chargement des problèmes...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="problems-container">
@@ -77,11 +102,8 @@ function ProblemsPage() {
                   {selectedProblem.difficulty}
                 </span>
               </div>
-              <div className="selected-problem-info">
-                <span className="problem-category">{selectedProblem.category}</span>
-                <span className="problem-acceptance">Acceptance: {selectedProblem.acceptance}</span>
-              </div>
-              <button className="start-problem-btn" onClick={()=>navigate(`/dashboard/${selectedProblem.id}`)}>Start Interview</button>
+              <button className="start-problem-btn" onClick={()=>{navigate(`/dashboard/${selectedProblem.id}`);
+                                        console.log(selectedProblem.id)}}>Start Interview</button>
             </div>
           )}
         </div>
