@@ -1,4 +1,5 @@
 import os
+from urllib import response
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -34,15 +35,7 @@ SYSTEM_PROMPT = load_system_prompt()
 def generate_ai_logic(prompt: str) -> str:
     """Communique avec l'API Gemini"""
     try:
-        response = gemini_client.models.generate_content(
-            model="gemini-3-flash-preview", # Utilisez un modèle stable
-            contents=prompt,
-            config={
-                "temperature": 0.4,
-                "max_output_tokens": 250,
-                "system_instruction": SYSTEM_PROMPT # Notez le singulier 'system_instruction'
-            }
-        )
+        response = chat_session.send_message(prompt)
         return response.text
     except Exception as e:
         print(f"Erreur API Gemini : {e}")
@@ -59,6 +52,15 @@ def text_to_speech(ai_response: str):
         play(audio)
     except Exception as e:
         print(f"Erreur TTS ElevenLabs : {e}")
+
+chat_session = gemini_client.chats.create(
+    model="gemini-3-flash-preview", # Utilisez un modèle stable
+    config={
+        "temperature": 0.4,
+        "max_output_tokens": 250,
+        "system_instruction": SYSTEM_PROMPT # Notez le singulier 'system_instruction'
+    }
+)
 
 # 4. Lancement du Serveur
 if __name__ == "__main__":

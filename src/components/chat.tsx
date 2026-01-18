@@ -3,11 +3,31 @@ import { useState, useRef, useEffect } from "react";
 import { useScribe } from "@elevenlabs/react";
 import "../css/components/chat.css";
 
+// --- INTERFACES ---
 interface Message {
     id: number;
     text: string;
     sender: "bot" | "user";
     time: string;
+}
+
+interface ParsedProblem {
+    main_description: string[];
+    examples: {
+        number: number;
+        input: string;
+        output: string;
+        explanation?: string;
+    }[];
+    constraints: string[];
+    follow_up?: string;
+}
+
+interface ProblemData {
+    id: string;
+    title: string;
+    difficulty: string;
+    parsed_description: ParsedProblem;
 }
 
 export default function Chat() {
@@ -22,22 +42,46 @@ export default function Chat() {
     ]);
     const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    
+    // États pour les données du problème
+    const [problemData, setProblemData] = useState<ProblemData | null>(null);
+    const [problemLoading, setProblemLoading] = useState(true);
+    
     const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    // --- CHARGEMENT DU PROBLÈME (FLASK) ---
+    useEffect(() => {
+        const fetchProblem = async (problemId: number) => {
+            try {
+                setProblemLoading(true);
+                const response = await fetch(`http://localhost:5000/api/get-problem/${problemId}`);
+                if (!response.ok) throw new Error('Failed to fetch problem');
+                const data = await response.json();
+                setProblemData(data);
+            } catch (error) {
+                console.error('Error fetching problem:', error);
+            } finally {
+                setProblemLoading(false);
+            }
+        };
+
+        fetchProblem(1); // Charge le problème 1 par défaut
+    }, []);
 
     // --- LOGIQUE ELEVENLABS SCRIBE ---
     const scribe = useScribe({
         modelId: "scribe_v2_realtime",
         onPartialTranscript: (data: { text: string }) => {
-            // Optionnel : tu pourrais afficher ce texte dans l'input en temps réel
-            console.log("Speech in progress:", data.text);
+            // Optionnel : console log pour debug
+            console.log("Transcription en cours:", data.text);
         },
         onCommittedTranscript: async (data: { text: string }) => {
             console.log("Transcription validée :", data.text);
-            await handleProcessAI(data.text); // Envoie automatiquement au backend
+            await handleProcessAI(data.text);
         },
     });
 
-    // Auto-scroll
+    // Auto-scroll des messages
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
@@ -46,13 +90,11 @@ export default function Chat() {
         return new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     };
 
-    // Fonction centrale pour traiter la réponse de l'IA (Texte ou Vocal)
+    // --- LOGIQUE D'ENVOI (BACKEND FLASK) ---
     const handleProcessAI = async (text: string) => {
-        if (!text.trim()) return;
+        if (!text.trim() || isLoading) return;
 
         setIsLoading(true);
-        
-        // 1. Ajouter le message de l'utilisateur à l'interface
         const userMessage: Message = {
             id: Date.now(),
             text: text,
@@ -62,16 +104,17 @@ export default function Chat() {
         setMessages(prev => [...prev, userMessage]);
 
         try {
-            // 2. Appel à la route de ton backend Python
             const response = await fetch('http://localhost:5000/process-transcript', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ transcript: text }),
+                body: JSON.stringify({ 
+                    transcript: text,
+                    problemTitle: problemData?.title 
+                }),
             });
             
             const data = await response.json();
 
-            // 3. Ajouter la réponse du bot à l'interface
             const botMessage: Message = {
                 id: Date.now() + 1,
                 text: data.response,
@@ -80,39 +123,27 @@ export default function Chat() {
             };
             setMessages(prev => [...prev, botMessage]);
         } catch (error) {
-            console.error("Error processing AI response:", error);
-            const errorMessage: Message = {
+            console.error("Error AI process:", error);
+            setMessages(prev => [...prev, {
                 id: Date.now() + 1,
-                text: "I'm having trouble connecting to my brain. Please try again.",
+                text: "Sorry, I'm having trouble connecting to the server.",
                 sender: "bot",
                 time: getCurrentTime()
-            };
-            setMessages(prev => [...prev, errorMessage]);
+            }]);
         } finally {
             setIsLoading(false);
+            setInputValue(""); // On vide l'input après traitement
         }
     };
 
-    // Gestion de l'envoi manuel par texte
-    const sendMessage = () => {
-        if (!inputValue.trim() || isLoading) return;
-        handleProcessAI(inputValue);
-        setInputValue("");
-    };
-
-    // Gestion du bouton Micro
     const toggleMic = async () => {
         try {
             if (scribe.isConnected) {
-                // Arrêter : On commit d'abord pour déclencher onCommittedTranscript
-                await scribe.commit();
-                // Petit délai pour laisser le temps au commit de finir avant de couper
+                scribe.commit();
                 setTimeout(() => scribe.disconnect(), 300);
             } else {
-                // Démarrer : Récupérer le token depuis Flask
                 const response = await fetch("http://localhost:5000/scribe-token");
                 const data = await response.json();
-                
                 if (data.token) {
                     await scribe.connect({ 
                         token: data.token,
@@ -121,20 +152,19 @@ export default function Chat() {
                 }
             }
         } catch (error) {
-            console.error("Mic connection error:", error);
+            console.error("Mic error:", error);
         }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            sendMessage();
+            handleProcessAI(inputValue);
         }
     };
 
     return (
         <div id="chat-container">
-            {/* Tabs */}
             <div id="chat-tabs">
                 <div className={`tab ${activeTab === "chat" ? "active" : ""}`} onClick={() => setActiveTab("chat")}>
                     AI Interviewer
@@ -151,7 +181,9 @@ export default function Chat() {
                             <div id="avatar">🤖</div>
                             <div>
                                 <div id="chat-title">AI Interviewer</div>
-                                <div id="chat-status">{scribe.isConnected ? "● Recording..." : "● Active"}</div>
+                                <div id="chat-status">
+                                    {scribe.isConnected ? "● Recording..." : isLoading ? "● Thinking..." : "● Active"}
+                                </div>
                             </div>
                         </div>
 
@@ -161,17 +193,10 @@ export default function Chat() {
                                 <span className="time">{msg.time}</span>
                             </div>
                         ))}
-
-                        {isLoading && (
-                            <div className="message bot">
-                                <p>Thinking...</p>
-                            </div>
-                        )}
                         <div ref={messagesEndRef} />
                     </div>
 
                     <div id="chat-input">
-                        {/* Bouton Micro mis à jour */}
                         <button 
                             id="mic-btn" 
                             onClick={toggleMic} 
@@ -182,72 +207,62 @@ export default function Chat() {
                             <Mic size={20} />
                         </button>
                         
-                        <input
-                            placeholder={scribe.isConnected ? "Listening..." : "Type your message..."}
+                        <input 
+                            placeholder={scribe.isConnected ? "Listening..." : "Type your message..."} 
                             value={scribe.isConnected ? scribe.partialTranscript : inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
                             onKeyPress={handleKeyPress}
                             disabled={isLoading}
                         />
-                        
-                        <button id="send-btn" onClick={sendMessage} disabled={isLoading || !inputValue.trim()}>
+
+                        <button 
+                            id="send-btn" 
+                            onClick={() => handleProcessAI(inputValue)} 
+                            disabled={isLoading || (!inputValue.trim() && !scribe.isConnected)}
+                        >
                             <Send size={20} />
                         </button>
                     </div>
                 </>
             )}
 
-            {/* Problem Description View */}
             {activeTab === "problem" && (
                 <div id="problem-description">
-                    <h2>1. Two Sum</h2>
-                    <div className="difficulty easy">Easy</div>
-                    <div className="problem-section">
-                        <p>
-                            Given an array of integers <code>nums</code> and an integer <code>target</code>,
-                            return <em>indices of the two numbers such that they add up to <code>target</code></em>.
-                        </p>
-                        <p>
-                            You may assume that each input would have <strong>exactly one solution</strong>,
-                            and you may not use the same element twice.
-                        </p>
-                        <p>You can return the answer in any order.</p>
-                    </div>
-                    <div className="problem-section">
-                        <h3>Example 1:</h3>
-                        <div className="example">
-                            <div><strong>Input:</strong> nums = [2,7,11,15], target = 9</div>
-                            <div><strong>Output:</strong> [0,1]</div>
-                            <div><strong>Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].</div>
-                        </div>
-                    </div>
-                    <div className="problem-section">
-                        <h3>Example 2:</h3>
-                        <div className="example">
-                            <div><strong>Input:</strong> nums = [3,2,4], target = 6</div>
-                            <div><strong>Output:</strong> [1,2]</div>
-                        </div>
-                    </div>
-                    <div className="problem-section">
-                        <h3>Example 3:</h3>
-                        <div className="example">
-                            <div><strong>Input:</strong> nums = [3,3], target = 6</div>
-                            <div><strong>Output:</strong> [0,1]</div>
-                        </div>
-                    </div>
-                    <div className="problem-section">
-                        <h3>Constraints:</h3>
-                        <ul>
-                            <li><code>2 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>
-                            <li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>
-                            <li><code>-10<sup>9</sup> &lt;= target &lt;= 10<sup>9</sup></code></li>
-                            <li><strong>Only one valid answer exists.</strong></li>
-                        </ul>
-                    </div>
-                    <div className="problem-section">
-                        <h3>Follow-up:</h3>
-                        <p>Can you come up with an algorithm that is less than O(n<sup>2</sup>) time complexity?</p>
-                    </div>
+                    {problemLoading ? (
+                        <p>Loading problem description...</p>
+                    ) : problemData ? (
+                        <>
+                            <h2>{problemData.id}. {problemData.title}</h2>
+                            <div className={`difficulty ${problemData.difficulty.toLowerCase()}`}>
+                                {problemData.difficulty}
+                            </div>
+                            <div className="problem-section">
+                                {problemData.parsed_description.main_description.map((p, i) => <p key={i}>{p}</p>)}
+                            </div>
+                            {problemData.parsed_description.examples.map((ex, i) => (
+                                <div key={i} className="problem-section">
+                                    <h3>Example {ex.number}:</h3>
+                                    <div className="example">
+                                        <div><strong>Input:</strong> {ex.input}</div>
+                                        <div><strong>Output:</strong> {ex.output}</div>
+                                        {ex.explanation && <div><strong>Explanation:</strong> {ex.explanation}</div>}
+                                    </div>
+                                </div>
+                            ))}
+                            {problemData.parsed_description.constraints.length > 0 && (
+                                <div className="problem-section">
+                                    <h3>Constraints:</h3>
+                                    <ul>
+                                        {problemData.parsed_description.constraints.map((c, i) => (
+                                            <li key={i} dangerouslySetInnerHTML={{ __html: `<code>${c}</code>` }} />
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <p>No problem data available.</p>
+                    )}
                 </div>
             )}
         </div>

@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Menu, Play, Send, LogIn, UserPlus } from "lucide-react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Menu, Send, LogIn, UserPlus } from "lucide-react";
+import RunButton from '../components/RunButton'
 import "../css/components/header.css";
 
 export default function Header() {
@@ -26,9 +27,7 @@ export default function Header() {
             <div id="header-center">
                 {isDashboard ? (
                     <div className="action-buttons">
-                        <button className="run-btn btn">
-                            <Play size={16} /> Run
-                        </button>
+                        <RunButton/>
                         <button className="submit-btn btn">
                             <Send size={16} /> Submit
                         </button>

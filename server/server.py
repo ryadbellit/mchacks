@@ -4,6 +4,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from gemini_integration import generate_ai_logic, text_to_speech, eleven_client
 from compiler_integration import compile_code_logic
+from database import problems_collection
 
 
 # Gemini et ElevenLabs imports
@@ -20,12 +21,13 @@ load_dotenv()
 @app.route("/compile", methods=["POST"])
 def handle_compile():
     data = request.get_json()
+    language = data.get("language")
     user_code = data.get("code")
     
     if not user_code:
         return jsonify({"error": "No code provided"}), 400
 
-    result = compile_code_logic(user_code)
+    result = compile_code_logic(language, user_code)
     
     return jsonify(result)
 
@@ -58,6 +60,32 @@ def process_transcript():
     
         
     return jsonify({"error": "No transcript provided"}), 400
+
+@app.route('/api/get-problem/<problem_id>', methods=['GET'])
+def get_problem(problem_id):
+    try:
+        print(problem_id)
+        print(f"Recherche du problème: {problem_id}")
+        
+        problem = problems_collection.find_one({
+            "$or": [
+                {"question_id": problem_id},      # String
+                {"question_id": int(problem_id)}  # Int
+            ]
+        })
+
+        print(problem)
+        
+        print(f"Problème trouvé: {problem is not None}")
+        
+        if problem:
+            problem['_id'] = str(problem['_id'])
+            return jsonify(problem), 200
+        else:
+            return jsonify({"error": "Problème non trouvé"}), 404
+    except Exception as e:
+        print(f"Erreur: {str(e)}")
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
