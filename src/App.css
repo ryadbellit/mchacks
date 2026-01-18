@@ -1,0 +1,21 @@
+/* This forces the app to be exactly the height of the screen */
+#root {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Prevents double scrollbars */
+}
+
+/* This ensures the header stays at the top and doesn't shrink */
+#app-header {
+    flex: 0 0 auto; 
+    width: 100%;
+}
+
+/* This ensures the page content fills the remaining space */
+main {
+    flex: 1;
+    width: 100%;
+    overflow: auto; /* Allows scrolling inside the page, not the whole app */
+}

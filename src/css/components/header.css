@@ -13,11 +13,17 @@
     box-sizing: border-box;
 }
 
+h2 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em; /* Tighter letters look cuter/modern */
+}
 
 #header-left {
     display: flex;
     align-items: center;
     gap: 12px;
+    cursor: pointer;
 }
 
 
@@ -46,9 +52,7 @@
 }
 
 
-#run-btn,
-#submit-btn,
-#menu-btn {
+.btn {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -57,22 +61,20 @@
     border: none;
     font-weight: 600;
     cursor: pointer;
-    color: white;
+    color:white;
 }
 
 
-#run-btn {
-    background-color: #16a34a;
+.run-btn {
+    background-color: var(--color-text-success);
 }
 
-
-#submit-btn {
-    background-color: #2563eb;
+.signin-btn {
+    background-color: var(--color-bubble-secondary);
 }
 
-
-#menu-btn {
-    background-color: #2563eb;
+.menu-btn, .signup-btn, .submit-btn {
+    background-color: var(--color-bubble-main);
 }
 
 

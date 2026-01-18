@@ -1,0 +1,149 @@
+/* landing.css */
+.landing-page {
+  min-height: 100vh;
+  background-color: var(--color-bg-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.hero-section {
+  max-width: 1200px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 24px;
+  color: #60a5fa;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ai-badge svg {
+  stroke-width: 2;
+}
+
+.hero-title {
+  font-size: 64px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #9ca3af;
+  max-width: 800px;
+  margin: 0;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 32px;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+}
+
+.btn-primary svg {
+  stroke-width: 2.5;
+}
+
+.btn-secondary {
+  padding: 16px 32px;
+  background-color: transparent;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  border: 2px solid #374151;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  border-color: #4b5563;
+  background-color: rgba(55, 65, 81, 0.3);
+}
+
+.features-list {
+  display: flex;
+  gap: 48px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #9ca3af;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.check-icon {
+  color: #22c55e;
+  stroke-width: 2.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 40px;
+  }
+
+  .hero-subtitle {
+    font-size: 18px;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .features-list {
+    gap: 24px;
+  }
+}
