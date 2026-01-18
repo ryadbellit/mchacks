@@ -1,5 +1,5 @@
 import Chat from '../components/chat';
-import MonacoEditor from '../components/code_editor'
+import CodeEditor from '../components/code_editor'
 import CameraPanel from '../components/camera_panel';
 import TestPanel from '../components/test_panel';
 import "../css/pages/dashboard.css";
@@ -12,7 +12,7 @@ export default function Dashboard() {
           <Chat />
         </div>
         <div className="component-wrapper codeblock-wrapper">
-          <MonacoEditor />
+          <CodeEditor />
         </div>
         <div className="sidebar-column">
           <div className="component-wrapper">
