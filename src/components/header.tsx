@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Menu, Send, LogIn, UserPlus } from "lucide-react";
+import { Send, LogIn, UserPlus } from "lucide-react";
 import RunButton from '../components/RunButton'
 import "../css/components/header.css";
 
