@@ -10,8 +10,10 @@ export default function LandingPage() {
   const handleStartPracticing = () => {
     if (isAuthenticated) {
     // Get the problem id randomly after, using a mock rn
-    const id = 1; 
-    navigate(`/dashboard/${id}`);
+    const min = 1;
+    const max = 2000;
+    const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min; 
+    navigate(`/dashboard/${randomNumber}`);
   } else {
     loginWithRedirect();
   }
@@ -60,7 +62,7 @@ export default function LandingPage() {
         <div className="features-list">
           <div className="feature-item">
             <CheckCircle size={20} className="check-icon" />
-            <span>500+ Problems</span>
+            <span>2000+ LeetCode Problems</span>
           </div>
           <div className="feature-item">
             <CheckCircle size={20} className="check-icon" />

@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useAuth0 } from '@auth0/auth0-react';
 import '../css/pages/problems.css';
 
 interface Problem {
-  id: number;
+  question_id: String;
   title: string;
   category: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
@@ -18,27 +19,27 @@ function ProblemsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
 
+  const {isAuthenticated, isLoading: authLoading } = useAuth0();
+
   useEffect(() => {
     const fetchProblems = async () => {
+      if(authLoading) return;
+
+      if(!isAuthenticated){
+        navigate("/");
+        return;
+      }
+
       try {
         setLoading(true);
-        const fetchedProblems: Problem[] = [];
-        
-        for(let n = 1; n < 10; n++){
-          const currentFetch = await fetch(`http://localhost:5000/api/get-problem/${n}`);
-          if (!currentFetch.ok) throw new Error('Failed to fetch problem');
-          const data = await currentFetch.json();
-          data.id = n;
-          fetchedProblems.push(data);
-        }
-        
-        setProblems(fetchedProblems);
-        
+        const allProblemsfetch = await fetch(`http://localhost:5000/api/get-problem`);
+        const data = await allProblemsfetch.json();
         // Afficher le premier problème automatiquement
-        if (fetchedProblems.length > 0) {
-          setSelectedProblem(fetchedProblems[0]);
+        if (data.length > 0) {
+          setSelectedProblem(data[0]);
         }
-        
+        setProblems(data);
+
       } catch (error) {
         console.error('Error fetching problems:', error);
       } finally {
@@ -47,7 +48,7 @@ function ProblemsPage() {
     };
 
     fetchProblems();
-  }, []);
+  }, [isAuthenticated, authLoading, navigate]);
 
   const handleRandomProblem = () => {
     if (problems.length === 0) return;
@@ -89,11 +90,11 @@ function ProblemsPage() {
         <div className="random-problem-section">
           <button className="random-problem-btn" onClick={handleRandomProblem}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
             </svg>
             Random Problem
           </button>
-          
+
           {selectedProblem && (
             <div className="selected-problem-card">
               <div className="selected-problem-header">
@@ -102,8 +103,9 @@ function ProblemsPage() {
                   {selectedProblem.difficulty}
                 </span>
               </div>
-              <button className="start-problem-btn" onClick={()=>{navigate(`/dashboard/${selectedProblem.id}`);
-                                        console.log(selectedProblem.id)}}>Start Interview</button>
+              <button className="start-problem-btn" onClick={() => {
+                navigate(`/dashboard/${selectedProblem.question_id}`);
+              }}>Start Interview</button>
             </div>
           )}
         </div>
@@ -121,7 +123,7 @@ function ProblemsPage() {
             </thead>
             <tbody>
               {problems.map((problem) => (
-                <tr key={problem.id} className="problem-row" onClick={()=>navigate(`/dashboard/${problem.id}`)}>
+                <tr key={Number(problem.question_id)} className="problem-row" onClick={() => navigate(`/dashboard/${problem.question_id}`)}>
                   <td className="col-status">
                     <div className={`status-icon ${problem.solved ? 'status-solved' : 'status-unsolved'}`}>
                       {problem.solved && (
