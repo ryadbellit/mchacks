@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as monaco from 'monaco-editor';
 import '../css/components/code_editor.css';
 
-export default function MonacoEditor() {
+export default function MonacoEditor({ problemData }: { problemData: any }) {
   const editorRef = useRef<HTMLDivElement>(null);
   const monacoInstance = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const [language, setLanguage] = useState('javascript');
@@ -49,6 +49,14 @@ export default function MonacoEditor() {
     };
   }, [language]);
 
+
+  // Update editor content when problemData changes
+  useEffect(() => {
+    if (monacoInstance.current && problemData?.starter_code) {
+      monacoInstance.current.setValue(problemData.starter_code);
+    }
+  }, [problemData]);
+
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLanguage(e.target.value);
   };
@@ -56,8 +64,8 @@ export default function MonacoEditor() {
   return (
     <div className="monaco-editor-container">
       <div className="monaco-header">
-        <select 
-          value={language} 
+        <select
+          value={language}
           onChange={handleLanguageChange}
           className="monaco-language-select"
         >

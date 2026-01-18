@@ -53,7 +53,7 @@ export default function Dashboard() {
           <Chat problemData={problemData} problemLoading={problemLoading} />
         </div>
         <div className="component-wrapper codeblock-wrapper">
-          <CodeEditor />
+          <CodeEditor problemData={problemData} />
         </div>
         <div className="sidebar-column">
           <div className="component-wrapper">
