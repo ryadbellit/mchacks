@@ -1,6 +1,7 @@
 import os
 import requests
 from dotenv import load_dotenv
+from database import problems_collection
 
 load_dotenv()
 
@@ -16,7 +17,6 @@ extensions = {
 }
 
 def compile_code_logic(language, user_code):
-    print(extensions[language])
     body = {
         "language": language,
         "stdin": "",

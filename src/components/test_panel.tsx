@@ -13,9 +13,11 @@ interface TestCase {
   memory: string;
 }
 
-export default function TestResults() {
+export default function TestResults({problemData}: {problemData: any}) {
   const testCases: TestCase[] = [
     {
+
+      
       id: 1,
       name: "Test Case 1",
       status: "passed",

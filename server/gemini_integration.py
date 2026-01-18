@@ -1,48 +1,53 @@
 import os
-from urllib import response
-from flask import Flask, jsonify, request
-from flask_cors import CORS
-from dotenv import load_dotenv
-
-# Importations des SDKs
 from elevenlabs.client import ElevenLabs
 from elevenlabs.play import play
 from google import genai
+from dotenv import load_dotenv
 
-# 1. Configuration Initiale
-load_dotenv() # Charge les clés ELEVENLABS_API_KEY et AI_API_KEY depuis le .env
+load_dotenv()
 
-app = Flask(__name__)
-# On active CORS pour que votre frontend React (port 5173) puisse communiquer avec ce serveur
-CORS(app) 
-
-# 2. Initialisation des Clients API
+# Initialisation
 eleven_client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))
 gemini_client = genai.Client(api_key=os.getenv("AI_API_KEY"))
 
-# 3. Chargement du Prompt Système
 def load_system_prompt():
     try:
         with open('prompt.txt', 'r', encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
-        return "Tu es un interviewer technique qui aide les étudiants de Polytechnique Montréal."
+        return "Tu es un interviewer technique qui aide les étudiants."
 
-SYSTEM_PROMPT = load_system_prompt()
 
-# --- LOGIQUE IA ---
+def generate_ai_logic(user_prompt: str, problem_context=None) -> str:
+    """Communique avec Gemini en incluant le contexte du problème actuel"""
+    
+    # On construit l'instruction système dynamiquement
+    base_prompt = load_system_prompt()
+    context_instruction = ""
+    
+    if problem_context:
+        context_instruction = f"\n\nL'utilisateur travaille actuellement sur ce problème : {problem_context}"
 
-def generate_ai_logic(prompt: str) -> str:
-    """Communique avec l'API Gemini"""
     try:
-        response = chat_session.send_message(prompt)
+        # On crée une session à chaque fois ou on utilise une session globale 
+        # mais on injecte le contexte dans le message
+        full_instruction = base_prompt + context_instruction
+        
+        # Utilisation de l'API Gemini avec instructions système
+        response = gemini_client.models.generate_content(
+            model="gemini-2.0-flash", # Version stable recommandée
+            contents=user_prompt,
+            config={
+                "system_instruction": full_instruction,
+                "temperature": 0.4,
+            }
+        )
         return response.text
     except Exception as e:
         print(f"Erreur API Gemini : {e}")
-        return "Désolé, j'ai eu une erreur lors du traitement de votre réponse."
-    
+        return "Désolé, j'ai eu une erreur lors du traitement."
+
 def text_to_speech(ai_response: str):
-    """Convertit le texte en audio avec ElevenLabs et joue l'audio"""
     try:
         audio = eleven_client.text_to_speech.convert(
             text=ai_response,
@@ -52,17 +57,3 @@ def text_to_speech(ai_response: str):
         play(audio)
     except Exception as e:
         print(f"Erreur TTS ElevenLabs : {e}")
-
-chat_session = gemini_client.chats.create(
-    model="gemini-3-flash-preview", # Utilisez un modèle stable
-    config={
-        "temperature": 0.4,
-        "max_output_tokens": 250,
-        "system_instruction": SYSTEM_PROMPT # Notez le singulier 'system_instruction'
-    }
-)
-
-# 4. Lancement du Serveur
-if __name__ == "__main__":
-    # debug=True permet de voir les erreurs en direct et de recharger le code automatiquement
-    app.run(port=5000, debug=True)

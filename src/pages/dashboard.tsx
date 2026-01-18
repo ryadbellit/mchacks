@@ -64,7 +64,7 @@ export default function Dashboard() {
             <CameraPanel />
           </div>
           <div className="component-wrapper">
-            <TestPanel />
+            <TestPanel problemData={problemData}/>
           </div>
         </div>
       </main>
