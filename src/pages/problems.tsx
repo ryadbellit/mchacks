@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import '../css/pages/problems.css';
 
 interface Problem {
@@ -29,6 +30,9 @@ const problems: Problem[] = [
 ];
 
 function ProblemsPage() {
+
+  const navigate = useNavigate();
+
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
 
   const handleRandomProblem = () => {
@@ -77,7 +81,7 @@ function ProblemsPage() {
                 <span className="problem-category">{selectedProblem.category}</span>
                 <span className="problem-acceptance">Acceptance: {selectedProblem.acceptance}</span>
               </div>
-              <button className="start-problem-btn">Start Interview</button>
+              <button className="start-problem-btn" onClick={()=>navigate(`/dashboard/${selectedProblem.id}`)}>Start Interview</button>
             </div>
           )}
         </div>
@@ -95,7 +99,7 @@ function ProblemsPage() {
             </thead>
             <tbody>
               {problems.map((problem) => (
-                <tr key={problem.id} className="problem-row">
+                <tr key={problem.id} className="problem-row" onClick={()=>navigate(`/dashboard/${problem.id}`)}>
                   <td className="col-status">
                     <div className={`status-icon ${problem.solved ? 'status-solved' : 'status-unsolved'}`}>
                       {problem.solved && (

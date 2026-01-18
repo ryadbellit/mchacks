@@ -8,10 +8,13 @@ export default function LandingPage() {
   const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   const handleStartPracticing = () => {
-    isAuthenticated ?
-      navigate("/dashboard")
-    : 
-      loginWithRedirect();
+    if (isAuthenticated) {
+    // Get the problem id randomly after, using a mock rn
+    const id = 1; 
+    navigate(`/dashboard/${id}`);
+  } else {
+    loginWithRedirect();
+  }
   };
 
   const handleBrowseProblems = () => {
@@ -45,7 +48,7 @@ export default function LandingPage() {
         {/* CTA Buttons */}
         <div className="cta-buttons">
           <button className="btn-primary" onClick={handleStartPracticing}>
-            Start Practicing Free
+            Start Practicing Interview
             <ArrowRight size={20} />
           </button>
           <button className="btn-secondary" onClick={handleBrowseProblems}>
