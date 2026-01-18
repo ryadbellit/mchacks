@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as monaco from 'monaco-editor';
 import '../css/components/code_editor.css';
 
-export default function MonacoEditor() {
+export default function CodeEditor() {
   const editorRef = useRef<HTMLDivElement>(null);
   const monacoInstance = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
   const [language, setLanguage] = useState('javascript');
@@ -29,7 +29,6 @@ export default function MonacoEditor() {
     };
   }, []);
 
-  // Update language when changed
   useEffect(() => {
     if (monacoInstance.current) {
       const model = monacoInstance.current.getModel();
