@@ -1,4 +1,5 @@
-/* This forces the app to be exactly the height of the screen */
+/* App.css */
+
 #root {
     display: flex;
     flex-direction: column;
@@ -11,11 +12,4 @@
 #app-header {
     flex: 0 0 auto; 
     width: 100%;
-}
-
-/* This ensures the page content fills the remaining space */
-main {
-    flex: 1;
-    width: 100%;
-    overflow: auto; /* Allows scrolling inside the page, not the whole app */
 }
