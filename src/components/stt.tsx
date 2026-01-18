@@ -17,6 +17,7 @@ const STTComponent: React.FC = () => {
     onCommittedTranscript: (data: { text: string }) => {
       console.log("Transcription finale :", data.text);
       // C'est ici que vous pourriez envoyer data.text à votre IA backend
+      postTranscriptToServer(data.text);
     },
   });
 
@@ -92,6 +93,20 @@ async function fetchTokenFromServer(): Promise<string | null> {
   } catch (error) {
     console.error("Erreur backend :", error);
     return null;
+  }
+}
+
+async function postTranscriptToServer(transcript: string): Promise<void> {
+  try {
+    await fetch("http://localhost:5000/process-transcript", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ transcript }),
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'envoi du transcript au serveur :", error);
   }
 }
 
