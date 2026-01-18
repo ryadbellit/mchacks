@@ -10,21 +10,6 @@ CORS(app)
 
 load_dotenv()
 
-@app.route('/scribe-token', methods=['POST'])
-def handle_prompt():
-    data = request.get_json()
-    
-    prompt = data.get('prompt')
-    if not prompt:
-        return jsonify({"error": "No prompt provided"}), 400
-    try :
-        ai_response = generate_ai_logic(prompt)
-        return jsonify({"response": ai_response})
-    
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-
 @app.route("/compile", methods=["POST"])
 def handle_compile():
     data = request.get_json()

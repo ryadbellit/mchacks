@@ -7,7 +7,6 @@ from flask_cors import CORS
 load_dotenv() # Charge votre ELEVENLABS_API_KEY depuis le .env
 
 app = Flask(__name__)
-app = Flask(__name__)
 CORS(app) # Permet à React de communiquer avec Python sans erreur de sécurité
 
 client = ElevenLabs(api_key=os.getenv("ELEVENLABS_API_KEY"))

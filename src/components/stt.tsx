@@ -42,6 +42,14 @@ const STTComponent: React.FC = () => {
     }
   };
 
+  const handleValidate = async () => {
+    // Cette fonction force le passage de "partial" à "committed"
+    await scribe.commit(); 
+    await new Promise(resolve => setTimeout(resolve, 500));
+    scribe.disconnect();
+    console.log("Validation manuelle demandée.");
+  };
+
   return (
     <div style={{ padding: "20px", border: "1px solid #ccc", borderRadius: "8px" }}>
       <h3>Entraînement Vocal</h3>
@@ -56,7 +64,7 @@ const STTComponent: React.FC = () => {
         </button>
 
         <button 
-          onClick={() => scribe.disconnect()} 
+          onClick={handleValidate} 
           disabled={!scribe.isConnected}
           style={{ padding: "10px", backgroundColor: "#f44336", color: "white" }}
         >
