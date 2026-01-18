@@ -1,31 +1,32 @@
 #app-header {
     width: 100%;
     height: 64px;
-    padding: 0 48px;
+    padding: 0 2rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: var(--color-bg-secondary);
     color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    flex-wrap: wrap;
-    overflow-x: auto;
     box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-h2 {
-  font-family: 'Quicksand', sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.02em; /* Tighter letters look cuter/modern */
-}
-
+/* Left Section */
 #header-left {
     display: flex;
     align-items: center;
     gap: 12px;
     cursor: pointer;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
 }
 
+#header-left:hover {
+    opacity: 0.8;
+}
 
 #logo {
     width: 36px;
@@ -36,59 +37,185 @@ h2 {
     align-items: center;
     justify-content: center;
     font-weight: 700;
+    font-size: 14px;
 }
-
 
 #title {
     font-size: 18px;
     font-weight: 600;
+    white-space: nowrap;
 }
 
-
+/* Center Section */
 #header-center {
     display: flex;
     align-items: center;
-    gap: 16px;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
 }
 
+.action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
+.header-tagline {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-align: center;
+}
+
+/* Right Section */
+#header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.username {
+    font-weight: 500;
+    color: #d1d5db;
+}
+
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Button Styles */
 .btn {
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 20px;
+    padding: 10px 20px;
     border-radius: 10px;
     border: none;
     font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
-    color:white;
+    color: white;
+    transition: all 0.2s ease;
+    white-space: nowrap;
 }
 
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
 
 .run-btn {
     background-color: var(--color-text-success);
+}
+
+.run-btn:hover {
+    background-color: #2d8c17;
+}
+
+.submit-btn {
+    background-color: var(--color-bubble-main);
+}
+
+.submit-btn:hover {
+    background-color: #2563eb;
 }
 
 .signin-btn {
     background-color: var(--color-bubble-secondary);
 }
 
-.menu-btn, .signup-btn, .submit-btn {
+.signin-btn:hover {
+    background-color: #1e293b;
+}
+
+.signup-btn {
     background-color: var(--color-bubble-main);
 }
 
-
-#header-right {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+.signup-btn:hover {
+    background-color: #2563eb;
 }
 
+.menu-btn {
+    background-color: var(--color-bubble-main);
+    padding: 10px 12px;
+}
 
-#signin-btn {
-    background: none;
-    border: none;
-    color: #d1d5db;
-    cursor: pointer;
-    font-size: 14px;
+.menu-btn:hover {
+    background-color: #2563eb;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    #app-header {
+        padding: 0 1.5rem;
+    }
+
+    #title {
+        display: none;
+    }
+
+    .header-tagline {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #app-header {
+        height: auto;
+        min-height: 64px;
+        padding: 0.75rem 1rem;
+        gap: 1rem;
+    }
+
+    .header-tagline {
+        display: none;
+    }
+
+    .action-buttons {
+        gap: 8px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .btn span {
+        display: none;
+    }
+
+    .auth-buttons {
+        gap: 8px;
+    }
+
+    #header-right {
+        gap: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    #app-header {
+        padding: 0.5rem;
+    }
+
+    .btn {
+        padding: 8px 12px;
+    }
+
+    #logo {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
 }
