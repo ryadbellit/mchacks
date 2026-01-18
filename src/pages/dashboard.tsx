@@ -1,0 +1,28 @@
+import Chat from '../components/chat';
+import CodeBlock from '../components/code_block';
+import CameraPanel from '../components/camera_panel';
+import TestPanel from '../components/test_panel';
+import "../css/pages/dashboard.css";
+
+export default function Dashboard() {
+  return (
+    <>
+      <main>
+        <div className="component-wrapper chat-wrapper">
+          <Chat />
+        </div>
+        <div className="component-wrapper codeblock-wrapper">
+          <CodeBlock />
+        </div>
+        <div className="sidebar-column">
+          <div className="component-wrapper">
+            <CameraPanel />
+          </div>
+          <div className="component-wrapper">
+            <TestPanel />
+          </div>
+        </div>
+      </main>
+    </>
+  );
+}

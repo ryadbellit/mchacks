@@ -48,7 +48,7 @@
 
 #run-btn,
 #submit-btn,
-#signup-btn {
+#menu-btn {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -71,7 +71,7 @@
 }
 
 
-#signup-btn {
+#menu-btn {
     background-color: #2563eb;
 }
 

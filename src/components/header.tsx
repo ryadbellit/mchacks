@@ -1,5 +1,5 @@
 // Header.tsx
-import { Play, Send } from "lucide-react";
+import { Menu, Play, Send } from "lucide-react";
 import "../css/components/header.css";
 
 
@@ -26,8 +26,10 @@ export default function Header() {
 
             {/* Right */}
             <div id="header-right">
-                <button id="signin-btn">Sign in</button>
-                <button id="signup-btn">Sign up</button>
+                <span>username</span>
+                <button id="menu-btn"> 
+                    <Menu size={16} />
+                </button>
             </div>
         </header>
     );

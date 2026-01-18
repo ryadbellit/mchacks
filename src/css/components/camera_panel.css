@@ -2,47 +2,63 @@
 .camera-panel {
   background-color: #1a1a1a;
   border-radius: 8px;
-  padding: 20px;
+  /* Use percentage or rem for padding to make it scale slightly better */
+  padding: 5%;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  box-sizing: border-box;
 }
 
 .camera-header {
-  margin-bottom: 20px;
+  /* Relative margin based on font size */
+  margin-bottom: 1.25rem;
+  flex: 0 0 auto;
 }
 
 .camera-header span {
   color: #ffffff;
-  font-size: 18px;
+  /* Using rem for consistent typography */
+  font-size: 1.1rem;
   font-weight: 500;
 }
 
 .camera-preview {
   background-color: #0d0d0d;
   border-radius: 12px;
-  aspect-ratio: 16/9;
+  /* This is the key to relativity - it maintains shape regardless of width */
+  aspect-ratio: 16 / 9;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   border: 1px solid #2a2a2a;
+
+  /* Allows the preview to grow/shrink but keep its ratio */
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .preview-placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   color: #6b7280;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
 .preview-placeholder::before {
   content: "";
-  width: 56px;
-  height: 56px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 7l-7 5 7 5V7z'/%3E%3Crect x='1' y='5' width='15' height='14' rx='2' ry='2'/%3E%3C/svg%3E");
+  /* Relative sizing for the icon */
+  width: 15%;
+  min-width: 40px;
+  max-width: 80px;
+  aspect-ratio: 1/1;
+  background-image: url("data:image/svg+xml,...");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -50,7 +66,9 @@
 
 .camera-controls {
   display: flex;
-  gap: 12px;
+  gap: 3%;
+  /* Relative gap between buttons */
+  flex: 0 0 auto;
 }
 
 .control-btn {
@@ -58,28 +76,15 @@
   background-color: #1f2937;
   border: 1px solid #374151;
   border-radius: 8px;
-  padding: 12px 16px;
+  /* Vertical padding in ems makes button height relative to text size */
+  padding: 0.75em 1em;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 0.5rem;
   color: #ffffff;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-.control-btn:hover {
-  background-color: #2d3748;
-  border-color: #4b5563;
-}
-
-.control-btn:active {
-  background-color: #374151;
-  transform: scale(0.98);
-}
-
-.control-btn svg {
-  stroke-width: 2;
 }
