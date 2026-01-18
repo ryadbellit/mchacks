@@ -2,9 +2,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Send, LogIn, UserPlus } from "lucide-react";
 import RunButton from '../components/RunButton'
+import { useTestPanel } from '../context/TestPanelContext';
 import "../css/components/header.css";
 
 export default function Header() {
+    const { testPanelRef } = useTestPanel();
     const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
     const navigate = useNavigate();
     const location = useLocation();

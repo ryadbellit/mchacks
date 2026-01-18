@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Play } from 'lucide-react';
+import { useTestPanel } from '../context/TestPanelContext';
 import '../css/components/run_button.css';
 
 export default function RunButton() {
+  const { testPanelRef } = useTestPanel();
   const [isCompiling, setIsCompiling] = useState(false);
   const [output, setOutput] = useState('');
 
@@ -40,6 +42,9 @@ export default function RunButton() {
         // Format the output based on the API response structure
         const outputText = result.stdout || result.output || JSON.stringify(result, null, 2);
         setOutput(outputText);
+        
+        // Call getComputedTests from test panel
+        testPanelRef?.current?.getComputedTests();
       }
     } catch (error) {
       setOutput(`Error: ${error instanceof Error ? error.message : 'Failed to compile'}`);

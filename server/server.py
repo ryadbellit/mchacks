@@ -17,11 +17,11 @@ CORS(app)
 
 load_dotenv()
 current_problem_context = None
-
-
+prob_id = 0
 
 @app.route("/compile", methods=["POST"])
 def handle_compile():
+    global prob_id
     data = request.get_json()
     language = data.get("language")
     user_code = data.get("code")
@@ -29,7 +29,7 @@ def handle_compile():
     if not user_code:
         return jsonify({"error": "No code provided"}), 400
 
-    result = compile_code_logic(language, user_code)
+    result = compile_code_logic(language, user_code, prob_id)
 
     return jsonify(result)
 
@@ -59,7 +59,7 @@ def process_transcript():
 
     if transcript:
         ai_response = generate_ai_logic(transcript, current_problem_context)
-        print("AI Response:", ai_response)
+        #print("AI Response:", ai_response)
         text_to_speech(ai_response)
         return jsonify({"response": ai_response})
 
@@ -69,9 +69,9 @@ def process_transcript():
 @app.route('/api/get-problem/<problem_id>', methods=['GET'])
 def get_problem(problem_id):
     global current_problem_context
+    global prob_id
     try:
-        print(problem_id)
-        print(f"Recherche du problème: {problem_id}")
+        prob_id = problem_id
 
         problem = problems_collection.find_one({
             "$or": [
@@ -80,9 +80,9 @@ def get_problem(problem_id):
             ]
         })
 
-        print(problem)
+        #print(problem)
 
-        print(f"Problème trouvé: {problem is not None}")
+        #print(f"Problème trouvé: {problem is not None}")
         current_problem_context = problem
 
         if problem:
@@ -91,7 +91,7 @@ def get_problem(problem_id):
         else:
             return jsonify({"error": "Problème non trouvé"}), 404
     except Exception as e:
-        print(f"Erreur: {str(e)}")
+        #print(f"Erreur: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 

@@ -16,10 +16,23 @@ extensions = {
     "csharp" : ".cs"
 }
 
-def compile_code_logic(language, user_code):
+def compile_code_logic(language, user_code, prob_id):
+    problem = problems_collection.find_one({"question_id": prob_id})
+    
+    test_code = """
+    \n\nsolution = Solution()
+test_cases = [121, -121, 10, 0, 12321]
+for test in test_cases:
+    result = solution.isPalindrome(test)
+    print(f'Input: {test}, Output: {result}')
+    """
+
+    print(test_code)
+    user_code += test_code    
+
     body = {
         "language": language,
-        "stdin": "",
+        "stdin": '',
         "files": [
             {
                 "name": "index" + extensions[language],
@@ -37,6 +50,7 @@ def compile_code_logic(language, user_code):
         response = requests.post(COMPILER_URL, json=body, headers=headers)
         response.raise_for_status()
         print(response.json())
+
         return response.json() # Retourne le dictionnaire Python
     except Exception as e:
         return {"error": str(e)}

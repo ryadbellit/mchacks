@@ -1,5 +1,6 @@
 // TestResults.tsx
 import { Check, Clock } from "lucide-react";
+import { useImperativeHandle, forwardRef, useState } from "react";
 import "../css/components/test_panel.css";
 
 interface TestCase {
@@ -13,11 +14,16 @@ interface TestCase {
   memory: string;
 }
 
-export default function TestResults({problemData}: {problemData: any}) {
-  const testCases: TestCase[] = [
+export interface TestPanelHandle {
+  getComputedTests: () => void;
+}
+
+const TestResults = forwardRef<TestPanelHandle, {problemData: any}>(({problemData}, ref) => {
+
+  const [testCases, setTestCases] = useState<TestCase[]>([]);
+  const testCaseFormat: TestCase[] = [
     {
 
-      
       id: 1,
       name: "Test Case 1",
       status: "passed",
@@ -58,6 +64,14 @@ export default function TestResults({problemData}: {problemData: any}) {
       memory: "42.1 MB"
     }
   ];
+
+  function getComputedTests() {
+    setTestCases(testCaseFormat);
+  }
+
+  useImperativeHandle(ref, () => ({
+    getComputedTests,
+  }));
 
   const passedTests = testCases.filter(t => t.status === "passed").length;
   const totalTests = testCases.length;
@@ -116,4 +130,8 @@ export default function TestResults({problemData}: {problemData: any}) {
       </div>
     </div>
   );
-}
+});
+
+TestResults.displayName = "TestResults";
+
+export default TestResults;

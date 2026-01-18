@@ -4,6 +4,7 @@ import CameraPanel from '../components/camera_panel';
 import TestPanel from '../components/test_panel';
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from 'react';
+import { useTestPanel } from '../context/TestPanelContext';
 
 import "../css/pages/dashboard.css";
 
@@ -29,7 +30,7 @@ interface ProblemData {
 
 export default function Dashboard() {
   const { problemId } = useParams<{ problemId: string }>();
-  
+  const { testPanelRef } = useTestPanel();
 
   const [problemData, setProblemData] = useState<ProblemData | null>(null);
   const [problemLoading, setProblemLoading] = useState(true);
@@ -50,7 +51,7 @@ export default function Dashboard() {
     };
     console.log("Fetching problem ID:", problemId);
     fetchProblem(Number(problemId)); // Charge le problème 1 par défaut
-  }, []);
+  }, [problemId]);
   return (
     <>
       <main>
@@ -65,7 +66,7 @@ export default function Dashboard() {
             <CameraPanel />
           </div>
           <div className="component-wrapper">
-            <TestPanel problemData={problemData}/>
+            <TestPanel ref={testPanelRef} problemData={problemData}/>
           </div>
         </div>
       </main>
