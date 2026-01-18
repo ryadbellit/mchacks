@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from elevenlabs.client import ElevenLabs
 from elevenlabs.play import play
 from google import genai
-from google.genai import types
 
 # 1. Configuration Initiale
 load_dotenv() # Charge les clés ELEVENLABS_API_KEY et AI_API_KEY depuis le .env
@@ -30,50 +29,19 @@ def load_system_prompt():
 
 SYSTEM_PROMPT = load_system_prompt()
 
-# --- ROUTES ---
-
-@app.route('/scribe-token', methods=['GET'])
-def get_scribe_token():
-    """Génère le jeton à usage unique pour ElevenLabs STT"""
-    try:
-        # En Python, on utilise usage_category au lieu de action
-        response = eleven_client.tokens.single_use.create("realtime_scribe")
-        return jsonify({"token": response.token})
-    except Exception as e:
-        print(f"Erreur ElevenLabs : {e}")
-        return jsonify({"error": str(e)}), 500
-
-@app.route('/process-transcript', methods=['POST'])
-def process_transcript():
-    """Reçoit le texte du frontend et demande une réponse à Gemini"""
-    # Extraction sécurisée des données JSON
-    data = request.get_json()
-    if not data:
-        return jsonify({"error": "JSON requis"}), 400
-        
-    transcript = data.get('transcript')
-    
-    if transcript:
-        ai_response = generate_ai_logic(transcript)
-        print("AI Response:", ai_response)
-        return jsonify({"response": ai_response})
-    
-        
-    return jsonify({"error": "No transcript provided"}), 400
-
 # --- LOGIQUE IA ---
 
 def generate_ai_logic(prompt: str) -> str:
     """Communique avec l'API Gemini"""
     try:
         response = gemini_client.models.generate_content(
-            model="gemini-2.0-flash", # Utilisez un modèle stable
+            model="gemini-3-flash-preview", # Utilisez un modèle stable
             contents=prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.4, 
-                max_output_tokens=250,
-                system_instruction=SYSTEM_PROMPT # Notez le singulier 'system_instruction'
-            )
+            config={
+                "temperature": 0.4,
+                "max_output_tokens": 250,
+                "system_instruction": SYSTEM_PROMPT # Notez le singulier 'system_instruction'
+            }
         )
         return response.text
     except Exception as e:
