@@ -18,6 +18,7 @@ CORS(app)
 
 load_dotenv()
 
+
 @app.route("/compile", methods=["POST"])
 def handle_compile():
     data = request.get_json()
