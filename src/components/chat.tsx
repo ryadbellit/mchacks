@@ -24,13 +24,18 @@ interface ParsedProblem {
 }
 
 interface ProblemData {
-    id: string;
+    question_id: string;
     title: string;
     difficulty: string;
     parsed_description: ParsedProblem;
 }
 
-export default function Chat() {
+interface ChatProps {
+    problemData: ProblemData | null;
+    problemLoading: boolean;
+}
+
+export default function Chat({problemData, problemLoading}: ChatProps) {
     const [activeTab, setActiveTab] = useState<"chat" | "problem">("chat");
     const [messages, setMessages] = useState<Message[]>([
         {
@@ -42,31 +47,9 @@ export default function Chat() {
     ]);
     const [inputValue, setInputValue] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    
-    // États pour les données du problème
-    const [problemData, setProblemData] = useState<ProblemData | null>(null);
-    const [problemLoading, setProblemLoading] = useState(true);
+
     
     const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    // --- CHARGEMENT DU PROBLÈME (FLASK) ---
-    useEffect(() => {
-        const fetchProblem = async (problemId: number) => {
-            try {
-                setProblemLoading(true);
-                const response = await fetch(`http://localhost:5000/api/get-problem/${problemId}`);
-                if (!response.ok) throw new Error('Failed to fetch problem');
-                const data = await response.json();
-                setProblemData(data);
-            } catch (error) {
-                console.error('Error fetching problem:', error);
-            } finally {
-                setProblemLoading(false);
-            }
-        };
-
-        fetchProblem(1); // Charge le problème 1 par défaut
-    }, []);
 
     // --- LOGIQUE ELEVENLABS SCRIBE ---
     const scribe = useScribe({
@@ -232,7 +215,7 @@ export default function Chat() {
                         <p>Loading problem description...</p>
                     ) : problemData ? (
                         <>
-                            <h2>{problemData.id}. {problemData.title}</h2>
+                            <h2>{problemData.question_id}. {problemData.title}</h2>
                             <div className={`difficulty ${problemData.difficulty.toLowerCase()}`}>
                                 {problemData.difficulty}
                             </div>
