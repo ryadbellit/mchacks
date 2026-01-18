@@ -1,10 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { Menu, Send, LogIn, UserPlus } from "lucide-react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { Send, LogIn, UserPlus } from "lucide-react";
 import RunButton from '../components/RunButton'
 import "../css/components/header.css";
 
 export default function Header() {
-    const isConnected = false; // TODO: replace with actual auth logic
+    const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -12,7 +13,7 @@ export default function Header() {
         navigate("/");
     }
 
-    const isDashboard = location.pathname === "/dashboard";
+    const isDashboard = location.pathname.includes("/dashboard/");
 
     return (
         <header id="app-header">
@@ -38,20 +39,21 @@ export default function Header() {
 
             {/* Right */}
             <div id="header-right">
-                {isConnected ? (
+                {isAuthenticated ? (
                     <>
-                        <span className="username">username</span>
-                        <button className="menu-btn btn" aria-label="Menu"> 
-                            <Menu size={20} />
+                        <span className="username">{user?.nickname || user?.email}</span>
+                        <button className="menu-btn btn" aria-label="Menu" onClick={()=>logout({ 
+                            logoutParams: {
+                                returnTo: window.location.origin 
+                            }
+                        })}
+                        > 
+                            <LogIn size={20} />
                         </button>
                     </> 
                 ) : ( 
                     <div className="auth-buttons">
-                        <button className="signin-btn btn">
-                            <LogIn size={18} />
-                            <span>Sign In</span>
-                        </button>
-                        <button className="signup-btn btn">
+                        <button className="signup-btn btn" onClick={()=>loginWithRedirect()}>
                             <UserPlus size={18} />
                             <span>Sign Up</span>
                         </button>

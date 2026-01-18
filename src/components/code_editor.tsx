@@ -5,7 +5,7 @@ import '../css/components/code_editor.css';
 export default function MonacoEditor({ problemData }: { problemData: any }) {
   const editorRef = useRef<HTMLDivElement>(null);
   const monacoInstance = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-  const [language, setLanguage] = useState('javascript');
+  const [language, setLanguage] = useState('python');
 
   useEffect(() => {
     if (!editorRef.current) return;

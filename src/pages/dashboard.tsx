@@ -2,6 +2,7 @@ import Chat from '../components/chat';
 import CodeEditor from '../components/code_editor'
 import CameraPanel from '../components/camera_panel';
 import TestPanel from '../components/test_panel';
+import { useParams } from "react-router-dom";
 import { useEffect, useState } from 'react';
 
 import "../css/pages/dashboard.css";
@@ -27,8 +28,12 @@ interface ProblemData {
 }
 
 export default function Dashboard() {
+  const { problemId } = useParams<{ problemId: string }>();
+  
+
   const [problemData, setProblemData] = useState<ProblemData | null>(null);
   const [problemLoading, setProblemLoading] = useState(true);
+
   useEffect(() => {
     const fetchProblem = async (problemId: number) => {
       try {
@@ -43,8 +48,8 @@ export default function Dashboard() {
         setProblemLoading(false);
       }
     };
-
-    fetchProblem(4); // Charge le problème 1 par défaut
+    console.log("Fetching problem ID:", problemId);
+    fetchProblem(Number(problemId)); // Charge le problème 1 par défaut
   }, []);
   return (
     <>

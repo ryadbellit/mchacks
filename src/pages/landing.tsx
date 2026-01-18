@@ -1,16 +1,27 @@
 import { useNavigate } from "react-router-dom";
 import { Sparkles, CheckCircle, ArrowRight } from "lucide-react";
+import { useAuth0 } from "@auth0/auth0-react";
 import "../css/pages/landing.css";
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
 
   const handleStartPracticing = () => {
-    navigate("/dashboard");
+    if (isAuthenticated) {
+    // Get the problem id randomly after, using a mock rn
+    const id = 1; 
+    navigate(`/dashboard/${id}`);
+  } else {
+    loginWithRedirect();
+  }
   };
 
   const handleBrowseProblems = () => {
-    navigate("/problems");
+    isAuthenticated ?
+      navigate("/problems")
+    : 
+      loginWithRedirect();
   };
 
   return (
@@ -37,7 +48,7 @@ export default function LandingPage() {
         {/* CTA Buttons */}
         <div className="cta-buttons">
           <button className="btn-primary" onClick={handleStartPracticing}>
-            Start Practicing Free
+            Start Practicing Interview
             <ArrowRight size={20} />
           </button>
           <button className="btn-secondary" onClick={handleBrowseProblems}>
